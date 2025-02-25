@@ -9,10 +9,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
+    private Integer clientID;
     private String address;
     private Integer port;
 
-    public Client(String address, int port) {
+    public Client(Integer clientID, String address, int port) {
+        this.clientID = clientID;
         this.address = address;
         this.port = port;
     }
@@ -32,21 +34,25 @@ public class Client {
             String inputLine;
 
             // send request message to server (worker)
-            outputLine = "addition";
+            outputLine = "INDEX Client" + clientID.toString() + " DOC11 tiger 100 cat 10 dog 20";
             out.println(outputLine);
             // receive reply message from server (worker)
             inputLine = in.readLine();
-            System.out.println(inputLine);
+            System.out.println("Indexing " + inputLine);
             
             // send request message to server (worker)
-            outputLine = "multiplication";
+            outputLine = "SEARCH cat";
             out.println(outputLine);
             // receive reply message from server (worker)
             inputLine = in.readLine();
-            System.out.println(inputLine);
+            System.out.println("Searching for cat");
+            String[] tokens = inputLine.split("\\s+");
+            for (int i = 0; i < tokens.length; i += 2) {
+                System.out.println(tokens[i] + " " + tokens[i + 1]);
+            }
             
             // send request message to server (worker)
-            outputLine = "quit";
+            outputLine = "QUIT";
             out.println(outputLine);
             
             // close connection
@@ -62,11 +68,11 @@ public class Client {
 
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.err.println("USE: java Client <IP address> <port>");
+            System.err.println("USE: java Client <client ID> <IP address> <port>");
             System.exit(1);
         }
 
-        Client client = new Client(args[0], Integer.parseInt(args[1]));
+        Client client = new Client(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
         client.run();
     }
 }

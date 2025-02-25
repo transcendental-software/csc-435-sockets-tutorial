@@ -99,22 +99,46 @@ Server
 ```
 java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Server 12345
 Server started and waiting for connections!
-Server got connection from 127.0.0.1!
-Server got connection from 127.0.0.1!
+> 
+Server got connection from 127.0.0.1
+indexing DOC11 from client 1
+tiger 100
+cat 10
+dog 20
+completed!
+> 
+searching for cat
+> 
+Server got connection from 127.0.0.1
+indexing DOC11 from client 2
+tiger 100
+cat 10
+dog 20
+completed!
+> 
+searching for cat
+> quit
+Server terminated!
 ```
 
 Client 1
 ```
-java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Client 127.0.0.1 12345
+java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Client 1 127.0.0.1 12345
 Client connected to 127.0.0.1!
-2+2=4
-2x2=4
+Indexing OK
+Searching for cat
+DOC10 20
+DOC100 30
+DOC1 10
 ```
 
 Client 2
 ```
 java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Client 127.0.0.1 12345
 Client connected to 127.0.0.1!
-2+2=4
-2x2=4
+Indexing OK
+Searching for cat
+DOC10 20
+DOC100 30
+DOC1 10
 ```
