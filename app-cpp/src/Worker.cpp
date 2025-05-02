@@ -15,55 +15,11 @@ extern "C"
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 void Worker::run() {
     char* buf = new char[MAX_BUFFER_SIZE];
     int numBytes;
-
-    while (true) {
-        // receive a request message from a client
-        memset(buf, 0, MAX_BUFFER_SIZE);
-        if ((numBytes = recv(sock, buf, MAX_BUFFER_SIZE - 1, 0)) == -1) {
-            std::cerr << "Error receiving data!" << std::endl;
-            break;
-        }
-        
-        if (strcmp(buf, "QUIT") == 0) {
-            break;
-        }
-
-        if (strcmp(buf, "addition") == 0) {
-            memset(buf, 0, MAX_BUFFER_SIZE);
-            strcpy(buf, "2+2=4");
-            // send reply message to the client
-            if (send(sock, buf, strlen(buf), 0) == -1) {
-                std::cerr << "Error sending data!" << std::endl;
-                break;
-            }
-            continue;
-        }
-
-        if (strcmp(buf, "multiplication") == 0) {
-            memset(buf, 0, MAX_BUFFER_SIZE);
-            strcpy(buf, "2x2=4");
-            // send reply message to the client
-            if (send(sock, buf, strlen(buf), 0) == -1) {
-                std::cerr << "Error sending data!" << std::endl;
-                break;
-            }
-            continue;
-        }
-
-        // send reply message to the client
-        memset(buf, 0, MAX_BUFFER_SIZE);
-        strcpy(buf, "???");
-        if (send(sock, buf, strlen(buf), 0) == -1) {
-            std::cerr << "Error sending data!" << std::endl;
-            break;
-        }
-    }
-
-    delete buf;
 
     while (true) {
         memset(buf, 0, MAX_BUFFER_SIZE);
@@ -92,7 +48,12 @@ void Worker::run() {
             std::cout << "completed!" << std::endl;
 
             std::string data{"OK"};
-            socket.send(zmq::buffer(data), zmq::send_flags::none);
+            memset(buf, 0, MAX_BUFFER_SIZE);
+            strcpy(buf, data.c_str());
+            if (send(sock, buf, strlen(buf), 0) == -1) {
+                std::cerr << "Error sending data!" << std::endl;
+                break;
+            }
 
             std::cout << "> " << std::flush;
             
@@ -110,7 +71,12 @@ void Worker::run() {
             std::cout << std::endl << "searching for " << tokens[0] << std::endl;
 
             std::string data{"DOC10 20 DOC100 30 DOC1 10"};
-            socket.send(zmq::buffer(data), zmq::send_flags::none);
+            memset(buf, 0, MAX_BUFFER_SIZE);
+            strcpy(buf, data.c_str());
+            if (send(sock, buf, strlen(buf), 0) == -1) {
+                std::cerr << "Error sending data!" << std::endl;
+                break;
+            }
 
             std::cout << "> " << std::flush;
             
@@ -118,11 +84,21 @@ void Worker::run() {
         }
 
         std::string data{"ERROR"};
-        socket.send(zmq::buffer(data), zmq::send_flags::none);
+        memset(buf, 0, MAX_BUFFER_SIZE);
+        strcpy(buf, data.c_str());
+        if (send(sock, buf, strlen(buf), 0) == -1) {
+            std::cerr << "Error sending data!" << std::endl;
+            break;
+        }
     }
 
     std::string data{"TERMINATE"};
-    socket.send(zmq::buffer(data), zmq::send_flags::none);
+    memset(buf, 0, MAX_BUFFER_SIZE);
+    strcpy(buf, data.c_str());
+    if (send(sock, buf, strlen(buf), 0) == -1) {
+        std::cerr << "Error sending data!" << std::endl;
+    }
 
-    socket.close();
+    delete buf;
+    close(sock);
 }
