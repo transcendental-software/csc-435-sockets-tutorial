@@ -67,7 +67,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.err.println("USE: java Client <client ID> <IP address> <port>");
             System.exit(1);
         }

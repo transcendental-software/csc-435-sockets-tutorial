@@ -47,7 +47,8 @@ public class Server implements Runnable {
                 }
                 
                 // extract client information
-                System.out.println("Server got connection from " + clientSocket.getInetAddress().getHostAddress());
+                System.out.println("");
+                System.out.print("Server got connection from " + clientSocket.getInetAddress().getHostAddress());
                 
                 // create worker thread for new client connection
                 Thread td = new Thread(new Worker(clientSocket));
