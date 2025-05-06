@@ -41,11 +41,12 @@ void Worker::run() {
                 tokens.push_back(token);
             }
 
-            std::cout << std::endl << "indexing " << tokens[2] << " from " << tokens[1] << std::endl;
+            std::cout << std::endl << "indexing " << tokens[2] << " from client " << tokens[1] << std::endl;
+
             for (auto i = 3; i < tokens.size(); i += 2) {
                 std::cout << tokens[i] << " " << tokens[i + 1] << std::endl;
             }
-            std::cout << "completed!" << std::endl;
+            std::cout << "completed!";
 
             std::string data{"OK"};
             memset(buf, 0, MAX_BUFFER_SIZE);
@@ -55,7 +56,7 @@ void Worker::run() {
                 break;
             }
 
-            std::cout << "> " << std::flush;
+            std::cout << std::endl << "> " << std::flush;
             
             continue;
         }
@@ -68,7 +69,7 @@ void Worker::run() {
                 tokens.push_back(token);
             }
 
-            std::cout << std::endl << "searching for " << tokens[0] << std::endl;
+            std::cout << std::endl << "searching for " << tokens[1];
 
             std::string data{"DOC10 20 DOC100 30 DOC1 10"};
             memset(buf, 0, MAX_BUFFER_SIZE);
@@ -78,7 +79,7 @@ void Worker::run() {
                 break;
             }
 
-            std::cout << "> " << std::flush;
+            std::cout << std::endl << "> " << std::flush;
             
             continue;
         }
@@ -90,13 +91,6 @@ void Worker::run() {
             std::cerr << "Error sending data!" << std::endl;
             break;
         }
-    }
-
-    std::string data{"TERMINATE"};
-    memset(buf, 0, MAX_BUFFER_SIZE);
-    strcpy(buf, data.c_str());
-    if (send(sock, buf, strlen(buf), 0) == -1) {
-        std::cerr << "Error sending data!" << std::endl;
     }
 
     delete buf;

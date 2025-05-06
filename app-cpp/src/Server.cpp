@@ -86,13 +86,15 @@ class Server
                 break;
             }
 
-            // release server information data structure
-            freeaddrinfo(servinfo);
-
             if (p == NULL)  {
-                std::cerr << "Server failed to bind!" << std::endl;
+                std::cerr << "Fatal Error: Ran out of connection options!" << std::endl;
+                // release server information data structure
+                freeaddrinfo(servinfo);
                 return;
             }
+
+            // release server information data structure
+            freeaddrinfo(servinfo);
 
             // listen for connections
             if (listen(server_sockfd, maxNumConnections) == -1) {
@@ -101,6 +103,7 @@ class Server
             }
 
             std::cout << "Server started and waiting for connections!" << std::endl;
+            std::cout << "> " << std::flush;
 
             while(true) {
                 sin_size = sizeof(clt_addr);
@@ -124,7 +127,7 @@ class Server
                     inet_ntop(clt_addr.ss_family, &(((struct sockaddr_in6*) &clt_addr)->sin6_addr), addr, sizeof(addr));
                 }
 
-                std::cout << "Server got connection from " << addr << "!" << std::endl;
+                std::cout << std::endl << "Server got connection from " << addr << "!";
 
                 // create worker thread for new client connection
                 workers.push_back(Worker(client_sockfd));
@@ -150,11 +153,9 @@ int main(int argc, char** argv)
 
     Server server(port, 4);
     std::thread serverThread = std::thread(&Server::run, &server);
-    
 
     std::string command;
     while (true) {
-        std::cout << "> ";
         std::getline(std::cin, command);
 
         if (command.compare("quit") == 0) {
@@ -165,6 +166,8 @@ int main(int argc, char** argv)
             char addr[INET6_ADDRSTRLEN];
             int rc;
 
+            server.setTerminate();
+
             // specify server address properties
             memset(&hints, 0, sizeof(hints));
             hints.ai_family = AF_UNSPEC;
@@ -173,7 +176,7 @@ int main(int argc, char** argv)
             // get server address information
             if ((rc = getaddrinfo("127.0.0.1", port.c_str(), &hints, &servinfo)) != 0) {
                 std::cerr << "Could not get address information!" << std::endl;
-                return;
+                return 1;
             }
 
             for(p = servinfo; p != NULL; p = p->ai_next) {
@@ -194,14 +197,16 @@ int main(int argc, char** argv)
             }
 
             if (p == NULL)  {
-                std::cerr << "Client failed to bind!" << std::endl;
-            } else {
-                close(sockfd);
+                std::cerr << "Fatal Error: Ran out of connection options!" << std::endl;
+                // release server information data structure
+                freeaddrinfo(servinfo);
+                return 1;
             }
 
             // release server information data structure
             freeaddrinfo(servinfo);
 
+            close(sockfd);
             serverThread.join();
             
             std::cout << "Server terminated!" << std::endl;

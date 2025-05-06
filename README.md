@@ -42,33 +42,56 @@ To run the C++ server (after you build the project) use the following command:
 
 To run the C++ client (after you build the project) use the following command:
 ```
-./build/client <IP address> <port>
+./build/client <client ID> <IP address> <port>
 ```
 
 #### Example
 
 Server
 ```
-./build/server 12345
 Server started and waiting for connections!
-Server got connection from 127.0.0.1!
-Server got connection from 127.0.0.1!
+> 
+Server got connection from 127.0.0.1
+indexing DOC11 from client 1
+tiger 100
+cat 10
+dog 20
+completed!
+> 
+searching for cat
+> 
+Server got connection from 127.0.0.1
+indexing DOC11 from client 2
+tiger 100
+cat 10
+dog 20
+completed!
+> 
+searching for cat
+> quit
+Server terminated!
 ```
 
 Client 1
 ```
-./build/client 127.0.0.1 12345
+./build/client 1 127.0.0.1 12345
 Client connected to 127.0.0.1!
-2+2=4
-2x2=4
+Indexing OK
+Searching for cat
+DOC10 20
+DOC100 30
+DOC1 10
 ```
 
 Client 2
 ```
-./build/client 127.0.0.1 12345
+./build/client 2 127.0.0.1 12345
 Client connected to 127.0.0.1!
-2+2=4
-2x2=4
+Indexing OK
+Searching for cat
+DOC10 20
+DOC100 30
+DOC1 10
 ```
 
 ### Java solution
@@ -90,7 +113,7 @@ java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Server <port>
 
 To run the Java Client (after you build the project) use the following command:
 ```
-java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Client <IP address> <port>
+java -cp target/app-java-1.0-SNAPSHOT.jar csc435.app.Client <client ID> <IP address> <port>
 ```
 
 #### Example

@@ -35,6 +35,9 @@ public class Server implements Runnable {
             // create, configure and bind server socket and listen for connections
             ServerSocket serverSocket = new ServerSocket(port, maxNumConnections, InetAddress.getByName(address));
 
+            System.out.println("Server started and waiting for connections!");
+            System.out.print("> ");
+
             while (true) {
                 // accept connection from client 
                 Socket clientSocket = serverSocket.accept();
@@ -79,14 +82,10 @@ public class Server implements Runnable {
         Thread serverThread = new Thread(server);
         serverThread.start();
         
-        System.out.println("Server started and waiting for connections!");
-        
         Scanner sc = new Scanner(System.in);
         String command;
 
         while (true) {
-            System.out.print("> ");
-            
             command = sc.nextLine();
             
             if (command.compareTo("quit") == 0) {
