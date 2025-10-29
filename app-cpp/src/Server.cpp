@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <memory>
+#include <functional>
 
 extern "C"
 {
@@ -48,7 +50,7 @@ class Server
             int yes = 1;
             int rc;
 
-            std::vector<Worker> workers;
+            std::vector<std::shared_ptr<Worker>> workers;
             std::vector<std::thread> threads;
 
             // specify server address properties
@@ -130,8 +132,8 @@ class Server
                 std::cout << std::endl << "Server got connection from " << addr << "!";
 
                 // create worker thread for new client connection
-                workers.push_back(Worker(client_sockfd));
-                threads.push_back(std::thread(&Worker::run, &(workers.back())));
+                workers.push_back(std::make_shared<Worker>(client_sockfd));
+                threads.push_back(std::thread(std::mem_fn(&Worker::run), workers.back()));
             }
 
             close(server_sockfd);

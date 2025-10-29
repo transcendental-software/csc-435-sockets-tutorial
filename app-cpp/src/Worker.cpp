@@ -48,7 +48,7 @@ void Worker::run() {
             }
             std::cout << "completed!";
 
-            std::string data{"OK"};
+            std::string data{"OK\n"};
             memset(buf, 0, MAX_BUFFER_SIZE);
             strcpy(buf, data.c_str());
             if (send(sock, buf, strlen(buf), 0) == -1) {
@@ -71,7 +71,7 @@ void Worker::run() {
 
             std::cout << std::endl << "searching for " << tokens[1];
 
-            std::string data{"DOC10 20 DOC100 30 DOC1 10"};
+            std::string data{"DOC10 20 DOC100 30 DOC1 10\n"};
             memset(buf, 0, MAX_BUFFER_SIZE);
             strcpy(buf, data.c_str());
             if (send(sock, buf, strlen(buf), 0) == -1) {
